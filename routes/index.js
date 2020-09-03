@@ -45,7 +45,7 @@ router.get('/', function (req, res) {
         if (typeof req.query.d === 'string') {
             rawData = req.query.d.toUpperCase();
             uid = rawData.substring(0, 14);                     /* Extract UID */
-            defaultKey = "FFFFFF" + uid;                        /* Use Default Key ("FFFFFF" + UID) */
+            defaultKey = "01020304" + uid;                        /* Use Default Key ("FFFFFF" + UID) */
             flagTamperTag = rawData.substring(14, 14 + 2);      /* Extract Tamper Flag */
             var tmp_timeStampTag = rawData.substring(16, 16 + 8);
             if (tmp_timeStampTag !== "") {                      /* Extract Time Stamp and Check the content*/
