@@ -130,20 +130,20 @@ router.get('/send', (req, res) => {
                 client.query('BEGIN', err => {
                     if (err) {
                         res.json({
-                            error: 'DB connection failed'
+                            error: err
                         })
                     } else {
                         const insertLog = 'INSERT INTO nfcs(uid, default_key) VALUES ($1, $2)';
-                        client.query(insertLog, (err, res) => {
+                        client.query(insertLog, (err, _) => {
                             if (err) {
                                 res.json({
-                                    error: 'DB query failed'
+                                    error: err
                                 });
                             } else {
                                 client.query('COMMIT', err => {
                                     if (err) {
                                         res.json({
-                                            error: 'DB commit failed'
+                                            error: err
                                         });
                                     }
                                 });
