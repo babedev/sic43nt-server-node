@@ -22,6 +22,8 @@ var express = require('express');
 var router = express.Router();
 var ks = require('../utils/keystream');
 
+var pg = require('pg');
+
 /* GET home page. */
 router.get('/', function (req, res) {
     var rawData = "";
@@ -116,10 +118,43 @@ router.get('/send', (req, res) => {
             }
 
             if (rollingCodeTag === rollingCodeServer) {
+                const client = new pg.Client({
+                    connectionString: process.env.DATABASE_URL,
+                    ssl: {
+                        rejectUnauthorized: false
+                    }
+                });
+
+                client.connect();
+
+                client.query('BEGIN', err => {
+                    if (err) {
+                        res.json({
+                            error: 'DB connection failed'
+                        })
+                    } else {
+                        const insertLog = 'INSERT INTO nfcs(uid, default_key) VALUES ($1, $2)';
+                        client.query(insertLog, (err, res) => {
+                            if (err) {
+                                res.json({
+                                    error: 'DB query failed'
+                                });
+                            } else {
+                                client.query('COMMIT', err => {
+                                    if (err) {
+                                        res.json({
+                                            error: 'DB commit failed'
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+
                 rollingCodeDecision = "Correct";
 
                 res.json({
-                    message: 'Succeed',
                     uid: uid,
                     default_key: defaultKey,
                     flag_tamper_tag: flagTamperTag,
@@ -136,7 +171,7 @@ router.get('/send', (req, res) => {
                 rollingCodeDecision = "Incorrect";
 
                 res.json({
-                    message: 'Rolling code incorrect'
+                    error: 'Rolling code incorrect'
                 })
             }
         } else {

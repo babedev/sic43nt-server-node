@@ -12,16 +12,6 @@ var users = require('./routes/users');
 
 var app = express();
 
-var pg = require('pg');
-var client = new pg.Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false
-    }
-});
-
-client.connect();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
