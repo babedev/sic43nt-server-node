@@ -139,6 +139,10 @@ router.get('/send', (req, res) => {
                     message: 'Rolling code incorrect'
                 })
             }
+        } else {
+            res.json({
+                error: 'Missing parameters'
+            })
         }
     } else {
         res.json({
