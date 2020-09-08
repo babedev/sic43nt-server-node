@@ -132,6 +132,8 @@ router.get('/send', (req, res) => {
                         res.json({
                             error: err
                         })
+
+                        return
                     } else {
                         const insertLog = 'INSERT INTO nfcs(uid, default_key) VALUES ($1, $2)';
                         client.query(insertLog, (err, _) => {
@@ -139,6 +141,8 @@ router.get('/send', (req, res) => {
                                 res.json({
                                     error: 'Failed'
                                 });
+
+                                return
                             } else {
                                 client.query('COMMIT', err => {
                                     if (err) {
