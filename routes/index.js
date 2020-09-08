@@ -137,13 +137,13 @@ router.get('/send', (req, res) => {
                         client.query(insertLog, (err, _) => {
                             if (err) {
                                 res.json({
-                                    error: err
+                                    error: 'Failed'
                                 });
                             } else {
                                 client.query('COMMIT', err => {
                                     if (err) {
                                         res.json({
-                                            error: err
+                                            error: 'Failed commit'
                                         });
                                     }
                                 });
